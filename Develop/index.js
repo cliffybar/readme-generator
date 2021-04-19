@@ -1,61 +1,75 @@
 // TODO: Include packages needed for this application
 const inquirer = require('inquirer');
+const fs = require('fs');
 const generate = require('./utils/generateMarkdown');
 
 // TODO: Create an array of questions for user input
 const questions = () => {
-    return inquirer.prompt([
+    inquirer.prompt([
         {
             type: "input",
-            name: "Project Title",
+            name: "title",
             message: "What is the project title?"
         },
         {
             type: "input",
-            name: "Description",
+            name: "description",
             message: "What is the project description?"
         },
         {
             type: "input",
-            name: "Installation Instructions",
+            name: "installation",
             message: "How is this project installed?"
         },
         {
             type: "input",
-            name: "Usage",
+            name: "usage",
             message: "How do you use this app?"
         },
         {
             type: "input",
-            name: "Contributions",
+            name: "contributions",
             message: "Please list all contributors to this project."
         },
         {
             type: "input",
-            name: "Tests",
-            message: "Please provide tests for this project"
+            name: "license",
+            message: "Please choose a license for yur projecty.",
+            choices: ["Apache", "GPL", "MIT", "N/A"]
         },
         {
             type: "input",
-            name: "Username",
+            name: "tests",
+            message: "How does a user test this app?"
+        },
+        {
+            type: "input",
+            name: "username",
             message: "What is your github username?"
         },
         {
             type: "input",
-            name: "GitHub",
+            name: "gitHub",
             message: "What is your GitHub repo link?"
         }
-    ]);
+    ])
 };
 
-questions();
+questions()
+    .then(function(data) {
+        const queryURL = `https://api.github.com/users${data.username}`;
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+        fs.writeFile("README.md", generate(data), function(err) {
+            if (err) {
+                throw err;
+            } else {
+                console.log("Congratulations! You have created a README.md successfully!")
+            };
+        });
+    }
+);
 
-// TODO: Create a function to initialize app
-function init() {}
+function init() {};
 
-// Function call to initialize app
 init();
 
